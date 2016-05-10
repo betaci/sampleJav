@@ -4,10 +4,27 @@ language: java
 # Version number
 jdk:
   - openjdk6
-  #- openjdk7
+  - openjdk7
   - oraclejdk7
   - oraclejdk8
 
 build:
+  pre_ci:
+    - docker build -t=shiphitchcock1/samplejav .
+
+  pre_ci_boot:  
+      image_name: shiphitchcock1/samplejav
+      image_tag: latest
+      pull: false
+      options: '--privileged=true --net=bridge -e FOO=true -e BOO=false'
+
   ci:
     - java -version
+
+  post_ci:
+    - docker push shiphitchcock1/samplejav
+
+integrations:
+  hub:
+    - integrationName: shiphitchcock1-hub
+      type: docker
